@@ -1,24 +1,35 @@
-import logo from './logo.svg';
+import React from 'react';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import ProjectsList from './components/admin/ProjectsList';
+import AddProjectForm from './components/admin/AddProjectForm';
+import EditProjectForm from './components/admin/EditProjectForm';
+import CvUploadForm from './components/admin/CvUploadForm';
+import PortfolioPage from './components/user/PortfolioPage'
+import ParticlesBackground from "./components/ParticlesBackground";
+
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <ParticlesBackground />
+              <PortfolioPage />
+            </>
+          }
+        />
+        <Route path="/admin/projects" element={<ProjectsList />} />
+        <Route path="/admin/projects/add" element={<AddProjectForm />} />
+        <Route path="/admin/edit-project/:id" element={<EditProjectForm />} />
+        <Route path="/admin/cv-upload" element={<CvUploadForm />} />
+
+      </Routes>
+    </Router>
   );
 }
 
