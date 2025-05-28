@@ -55,7 +55,7 @@ const handleSubmit = async (e) => {
           <h2>About Me</h2>
           <div className="about-content">
             <img
-              src={`${process.env.REACT_APP_API_BASE_URL}/me/IMG_3800.PNG`}
+              src="/IMG_3800.PNG"
               alt="Muditha Kandewatta"
               className="about-image"
             />
