@@ -7,82 +7,8 @@ import { Navigation, Pagination, A11y } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-
-import { FaReact, FaNodeJs, FaHtml5, FaCss3Alt, FaJsSquare, FaGitAlt } from 'react-icons/fa';
-
-const skills = [
-  { id: 1, name: 'React', icon: <FaReact size={48} color="#61DBFB" /> },
-  { id: 2, name: 'Node.js', icon: <FaNodeJs size={48} color="#3C873A" /> },
-  { id: 3, name: 'JavaScript', icon: <FaJsSquare size={48} color="#F7DF1E" /> },
-  { id: 4, name: 'HTML5', icon: <FaHtml5 size={48} color="#E34F26" /> },
-  { id: 5, name: 'CSS3', icon: <FaCss3Alt size={48} color="#1572B6" /> },
-  { id: 6, name: 'Git', icon: <FaGitAlt size={48} color="#F05032" /> },
-  // add more skills here
-];
-
-const SkillsSection = () => (
-  <section id="skills" className="section">
-    <h2>Skills</h2>
-    <div className="skills-gallery">
-      {skills.map(({ id, name, icon }) => (
-        <div key={id} className="skill-card">
-          <div className="skill-icon">{icon}</div>
-          <p className="skill-name">{name}</p>
-        </div>
-      ))}
-    </div>
-
-    <style>{`
-      .skills-gallery {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        gap: 1.5rem;
-        justify-items: center;
-        margin-top: 1.5rem;
-      }
-      .skill-card {
-        background: rgba(255, 215, 0, 0.1);
-        border: 2px solid gold;
-        border-radius: 10px;
-        padding: 1rem;
-        width: 100px;
-        text-align: center;
-        box-shadow: 0 0 8px 1px rgba(255, 215, 0, 0.4);
-        transition: transform 0.3s ease;
-        cursor: default;
-      }
-      .skill-card:hover {
-        transform: scale(1.1);
-        box-shadow: 0 0 15px 3px gold;
-      }
-      .skill-icon {
-        margin-bottom: 0.5rem;
-      }
-      .skill-name {
-        font-weight: 600;
-        color: gold;
-        font-size: 1.1rem;
-        user-select: none;
-      }
-
-      @media (max-width: 600px) {
-        .skills-gallery {
-          grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-          gap: 1.4rem;
-        }
-        .skill-card {
-          width: 100px;
-          padding: 0.75rem;
-        }
-        .skill-name {
-          font-size: 1rem;
-        }
-      }
-    `}</style>
-  </section>
-);
-
-
+import SkillsSection from './SkillsSection';
+import ContactDetailsCard from './ContactDetailsCard';
 
 const PortfolioPage = () => {
   const [projects, setProjects] = useState([]);
@@ -92,8 +18,8 @@ const PortfolioPage = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/projects');
-        setProjects(res.data);
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/projects`);
+        setProjects(res.data.reverse());
       } catch (error) {
         setProjectsError('Failed to load projects.');
       } finally {
@@ -103,6 +29,24 @@ const PortfolioPage = () => {
     fetchProjects();
   }, []);
 
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const data = {
+    name: form.name.value,
+    email: form.email.value,
+    message: form.message.value,
+  };
+
+  try {
+    await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/messages`, data);
+    alert('Thank you for contacting me! I will get back to you soon.');
+    form.reset();
+  } catch (error) {
+    alert('Failed to send message. Please try again later.');
+  }
+};
+
   return (
     <>
       <main className="container">
@@ -111,7 +55,7 @@ const PortfolioPage = () => {
           <h2>About Me</h2>
           <div className="about-content">
             <img
-              src="http://localhost:5000/uploads/me/IMG_3800.PNG"
+              src={`${process.env.REACT_APP_API_BASE_URL}/me/IMG_3800.PNG`}
               alt="Muditha Kandewatta"
               className="about-image"
             />
@@ -121,8 +65,11 @@ const PortfolioPage = () => {
                 in MERN stack applications. I love crafting interactive and visually appealing web experiences.
               </p>
               <p>
-                I have experience with React, Node.js, Express, MongoDB, and many other technologies. When I'm not coding,
-                I enjoy learning about cybersecurity and data science.
+                With a strong foundation in full-stack development and data analysis, I thrive at the intersection 
+                of technology and problem-solving. I specialize in building modern web applications using the MERN 
+                stack. Beyond academics, I value teamwork, continuous learning, and creating impactful digital 
+                experiences. My goal is to innovate and contribute to meaningful projects that make a real-world
+                 difference.
               </p>
             </div>
           </div>
@@ -134,7 +81,7 @@ const PortfolioPage = () => {
         <div className="contact-card" style={{ textAlign: 'center' }}>
             <p>You can download my latest CV here:</p>
             <a
-            href="http://localhost:5000/uploads/cv/Muditha_Kandewatta_CV.pdf"
+            href={`${process.env.REACT_APP_API_BASE_URL}/uploads/cv/Muditha_Kandewatta_CV.pdf`}
             download
             className="btn btn-primary btn-lg"
             >
@@ -164,6 +111,7 @@ const PortfolioPage = () => {
               slidesPerView={1}
               navigation
               pagination={{ clickable: true }}
+              loop={true}
               style={{ paddingBottom: '40px' }}
             >
               {projects.map((project) => (
@@ -171,7 +119,7 @@ const PortfolioPage = () => {
                   <div className="project-card">
                     {project.image && (
                       <img
-                        src={`http://localhost:5000/uploads/${project.image}`}
+                        src={`${process.env.REACT_APP_API_BASE_URL}/uploads/${project.image}`}
                         alt={project.title}
                         className="project-image"
                       />
@@ -228,14 +176,7 @@ const PortfolioPage = () => {
         <h2>Contact</h2>
         <div className="contact-card">
             <p>Feel free to reach out to me by filling the form below:</p>
-            <form
-            onSubmit={(e) => {
-                e.preventDefault();
-                alert('Thank you for contacting me! I will get back to you soon.');
-                e.target.reset();
-            }}
-            className="contact-form"
-            >
+            <form onSubmit={handleSubmit} className="contact-form">
             <label htmlFor="name">Name:</label>
             <input type="text" id="name" name="name" required placeholder="Your name" />
 
@@ -252,6 +193,10 @@ const PortfolioPage = () => {
         </div>
         </section>
 
+        <section id="contact">
+        <ContactDetailsCard />
+      </section>
+      <p>&copy; 2025 Muditha Kandewatta. All rights reserved.</p>
       </main>
 
       <style>{`
@@ -323,7 +268,7 @@ const PortfolioPage = () => {
           margin: 0 auto;
           columns: 2;
           column-gap: 3rem;
-          font-size: 0.9rem;
+          font-size: 0.5rem;
         }
         .skills-list li {
           margin-bottom: 0.8rem;
@@ -335,7 +280,7 @@ const PortfolioPage = () => {
           position: absolute;
           left: 0;
           color: gold;
-          font-size: 0.9rem;
+          font-size: 0.5rem;
           line-height: 1;
         }
 
@@ -376,6 +321,12 @@ const PortfolioPage = () => {
           height: 320px;
           object-fit: cover;
           border-bottom: 2px solid gold;
+          transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+
+        .project-card:hover .project-image {
+          transform: scale(1.05); /* Slight zoom */
+          opacity: 0.95;
         }
 
         .project-content {

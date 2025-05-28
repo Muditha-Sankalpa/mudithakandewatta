@@ -13,7 +13,7 @@ const ProjectsList = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/projects');
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/projects`);
         setProjects(res.data);
       } catch (err) {
         setError('Failed to fetch projects.');
@@ -29,7 +29,7 @@ const ProjectsList = () => {
     if (!window.confirm('Are you sure you want to delete this project?')) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/projects/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/projects/${id}`);
       setProjects(projects.filter(project => project._id !== id));
     } catch (err) {
       alert('Failed to delete project.');
@@ -56,7 +56,7 @@ const ProjectsList = () => {
               <div className="card h-100">
                 {project.image && (
                   <img
-                    src={`http://localhost:5000/uploads/${project.image}`} // Adjust path as needed
+                    src={`${process.env.REACT_APP_API_BASE_URL}/uploads/${project.image}`} // Adjust path as needed
                     className="card-img-top"
                     alt={project.title}
                     style={{ maxHeight: '200px', objectFit: 'cover' }}

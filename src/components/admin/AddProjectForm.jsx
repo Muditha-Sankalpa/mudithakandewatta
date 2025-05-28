@@ -36,7 +36,7 @@ const AddProjectForm = () => {
     data.append('image', formData.image);
 
     try {
-      await axios.post('http://localhost:5000/api/projects', data);
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/projects`, data);
       setStatus('Project added successfully!');
       setFormData({
         title: '',

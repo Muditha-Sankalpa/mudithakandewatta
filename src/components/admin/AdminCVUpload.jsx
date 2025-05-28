@@ -30,7 +30,7 @@ const AdminCVUpload = () => {
     formData.append('cv', file);
 
     try {
-      const res = await fetch('/api/admin/upload-cv', {
+      const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/admin/upload-cv`, {
         method: 'POST',
         body: formData,
       });

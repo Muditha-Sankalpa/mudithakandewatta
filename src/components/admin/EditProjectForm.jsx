@@ -25,9 +25,9 @@ const EditProjectForm = () => {
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/projects/${id}`);
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/projects/${id}`);
         const project = res.data;
-        setCurrentImageUrl(project.image ? `http://localhost:5000/uploads/${project.image}` : '');
+        setCurrentImageUrl(project.image ? `${process.env.REACT_APP_API_BASE_URL}/uploads/${project.image}` : '');
 
         setFormData({
           title: project.title || '',
@@ -85,7 +85,7 @@ const EditProjectForm = () => {
     }
 
     try {
-      await axios.put(`http://localhost:5000/api/projects/${id}`, data, {
+      await axios.put(`${process.env.REACT_APP_API_BASE_URL}/api/projects/${id}`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
