@@ -1,6 +1,7 @@
 // src/components/admin/AddProjectForm.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const AddProjectForm = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ const AddProjectForm = () => {
   });
 
   const [status, setStatus] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -48,7 +50,10 @@ const AddProjectForm = () => {
       });
       // reset file input manually
       document.getElementById('imageInput').value = null;
-    } catch (err) {
+      setTimeout(() => {
+          navigate('/admin/dashboard');
+        }, 2000);    
+      } catch (err) {
       setStatus('Error adding project.');
     }
   };
